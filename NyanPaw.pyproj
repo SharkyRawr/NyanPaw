@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ff32836d-f7b9-467e-8d5e-6f3cb471053f}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile />
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId>{d1720833-0f46-413a-8063-f71fdf4b49eb}</InterpreterId>
+    <InterpreterVersion>2.7</InterpreterVersion>
+    <IsWindowsApplication>False</IsWindowsApplication>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="NyanPaw\blockchain\admin.py" />
+    <Compile Include="NyanPaw\blockchain\management\commands\importblockchain.py" />
+    <Compile Include="NyanPaw\blockchain\management\commands\__init__.py" />
+    <Compile Include="NyanPaw\blockchain\management\__init__.py" />
+    <Compile Include="NyanPaw\blockchain\migrations\0001_initial.py" />
+    <Compile Include="NyanPaw\blockchain\migrations\__init__.py" />
+    <Compile Include="NyanPaw\blockchain\models.py" />
+    <Compile Include="NyanPaw\blockchain\model_routers.py" />
+    <Compile Include="NyanPaw\blockchain\tests.py" />
+    <Compile Include="NyanPaw\blockchain\views.py" />
+    <Compile Include="NyanPaw\blockchain\__init__.py" />
+    <Compile Include="NyanPaw\manage.py" />
+    <Compile Include="NyanPaw\NyanPaw\settings.py" />
+    <Compile Include="NyanPaw\NyanPaw\urls.py" />
+    <Compile Include="NyanPaw\NyanPaw\wsgi.py" />
+    <Compile Include="NyanPaw\NyanPaw\__init__.py" />
+    <Compile Include="NyanPaw\web\admin.py" />
+    <Compile Include="NyanPaw\web\models.py" />
+    <Compile Include="NyanPaw\web\model_routers.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NyanPaw\web\templatetags\hex.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NyanPaw\web\templatetags\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NyanPaw\web\tests.py" />
+    <Compile Include="NyanPaw\web\views.py" />
+    <Compile Include="NyanPaw\web\__init__.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NyanPaw" />
+    <Folder Include="NyanPaw\blockchain\" />
+    <Folder Include="NyanPaw\blockchain\management\" />
+    <Folder Include="NyanPaw\blockchain\management\commands\" />
+    <Folder Include="NyanPaw\blockchain\migrations\" />
+    <Folder Include="NyanPaw\NyanPaw" />
+    <Folder Include="NyanPaw\web" />
+    <Folder Include="NyanPaw\web\templatetags\" />
+    <Folder Include="NyanPaw\web\templates\" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="{d1720833-0f46-413a-8063-f71fdf4b49eb}\2.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="NyanPaw\blockchain\management\commands\importblockchain.pyc" />
+    <Content Include="NyanPaw\blockchain\management\commands\__init__.pyc" />
+    <Content Include="NyanPaw\web\templates\default.html" />
+  </ItemGroup>
+  <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
+</Project>
