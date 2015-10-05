@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body>
+
+    {% load hex %}
+
+    {% for block in blocks %}
+    <pre>
+Block {{block.id}} (magic: {{block.Magic}})
+PreviousBlock:  {{block.PreviousBlockHash}}
+Merkle Root:    {{block.MerkleRoot}}
+Time:           {{block.Time}}
+Bits:           {{block.Bits}}
+Nonce:          {{block.Nonce}}
+
+Transactions:
+{% for tx in block.Transactions.all %}
+    Inputs:{% for i in tx.Inputs.all %}
+        PreviousTx: {{i.PreviousTx}}
+        TxOutId: {{i.TxOutId}}
+        ScriptSig: {{i.ScriptSig|stringify}}
+        Sequence: {{i.Sequence}}{% endfor %}
+
+    Outputs:{% for o in tx.Outputs.all %}
+        Value: {{o.Value}}
+        PubKey: {{o.PubKey|hexlify}}{% endfor%}
+{% endfor %}
+    </pre>
+    <hr />
+    {% endfor %}
+
+</body>
+</html>
