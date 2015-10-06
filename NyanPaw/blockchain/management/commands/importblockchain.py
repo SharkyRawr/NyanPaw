@@ -2,6 +2,7 @@
 import argparse
 from django.core.management.base import BaseCommand, CommandError
 from django.db import transaction
+from django.db.utils import IntegrityError
 
 from blockchain.models import Block as dbBlock
 
@@ -20,13 +21,16 @@ class Command(BaseCommand):
         i = 0
         with transaction.atomic():
             while True:
-                b = Block(f)     
-                db = dbBlock.from_blocktools(b)       
-                db.save()
-                print str(b)
+                b = Block(f)
+                db = dbBlock.from_blocktools(b)
+                try:
+                    db.save()
+                    print str(b)
+                except IntegrityError as ie:
+                    pass
 
                 i += 1
-                if i > 1000:
+                if i > 666:
                     break
 
         f.close()
