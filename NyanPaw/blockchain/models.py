@@ -1,17 +1,18 @@
 ﻿from django.db import models
 
-import django.db.models.options as options
-options.DEFAULT_NAMES = options.DEFAULT_NAMES + ('in_db',)
+from blockchain.util import calculate_difficulty
 
 # Create your models here.
 
 class Block(models.Model):
     # Header
     Version = models.PositiveIntegerField()
+    Hash = models.CharField(max_length=64, unique=True)
     PreviousBlockHash = models.CharField(max_length=64)
     MerkleRoot = models.CharField(max_length=64)
     Time = models.PositiveIntegerField()
     Bits = models.PositiveIntegerField()
+    Difficulty = models.FloatField()
     Nonce = models.PositiveIntegerField()
 
     # Body
@@ -21,7 +22,11 @@ class Block(models.Model):
 
     @staticmethod
     def from_blocktools(block):
-        r = Block() # return val
+        try:
+            r = Block.objects.get(Hash=block.blockHeader.hash())
+            return r
+        except Block.DoesNotExist:
+            r = Block()
         
         # Block Header
         h = block.blockHeader
@@ -30,9 +35,11 @@ class Block(models.Model):
         r.MerkleRoot = unicode(h.merkleHash.encode('hex'))
         r.Time = h.time
         r.Bits = h.bits
+        r.Difficulty = calculate_difficulty(r.Bits)
         r.Nonce = h.nonce
 
         # Block Body
+        r.Hash = h.hash()
         r.Magic = "%8x" % (block.magicNum)
         r.Size = block.blocksize
 
@@ -58,21 +65,20 @@ class Block(models.Model):
 
         return r
 
+class Transaction(models.Model):
+    Version = models.PositiveIntegerField()
+    Locktime = models.PositiveIntegerField()
+    Block = models.ForeignKey(Block, related_name='Transactions')
+
 class Input(models.Model):
     PreviousTx = models.CharField(max_length=64)
     TxOutId = models.PositiveIntegerField()
     ScriptSig = models.BinaryField()
     Sequence = models.PositiveIntegerField()
-    Transaction = models.ForeignKey('Transaction', related_name='Inputs')
+    Transaction = models.ForeignKey(Transaction, related_name='Inputs')
 
 class Output(models.Model):
     Value = models.PositiveIntegerField()
     PubKey = models.BinaryField()
-    Transaction = models.ForeignKey('Transaction', related_name='Outputs')
+    Transaction = models.ForeignKey(Transaction, related_name='Outputs')
 
-class Transaction(models.Model):
-    Version = models.PositiveIntegerField()
-    #Inputs = models.PositiveIntegerField()
-    #Outputs = models.PositiveIntegerField()
-    Locktime = models.PositiveIntegerField()
-    Block = models.ForeignKey(Block, related_name='Transactions')

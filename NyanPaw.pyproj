@@ -31,6 +31,9 @@
     <Compile Include="NyanPaw\blockchain\models.py" />
     <Compile Include="NyanPaw\blockchain\model_routers.py" />
     <Compile Include="NyanPaw\blockchain\tests.py" />
+    <Compile Include="NyanPaw\blockchain\util.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="NyanPaw\blockchain\views.py" />
     <Compile Include="NyanPaw\blockchain\__init__.py" />
     <Compile Include="NyanPaw\manage.py" />
