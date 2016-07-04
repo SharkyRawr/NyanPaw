@@ -8,6 +8,7 @@ import binascii
 
 # Create your models here.
 
+
 class Block(models.Model):
     # Header
     Version = models.PositiveIntegerField()
@@ -20,7 +21,7 @@ class Block(models.Model):
     Nonce = models.PositiveIntegerField()
 
     # Body
-    Magic = models.CharField(max_length=8) # 4 bytes as hex
+    Magic = models.CharField(max_length=8)  # 4 bytes as hex
     Size = models.PositiveIntegerField()
     #Transactions = models.ForeignKey(Transaction, related_name='blocks')
 
@@ -56,7 +57,8 @@ class Block(models.Model):
             tx.save()
 
             for bin in btx.inputs:
-                i = Input(PreviousTx=binascii.hexlify(bin.prevhash), TxOutId=bin.txOutId, ScriptSig=bin.scriptSig, Sequence=bin.seqNo)
+                i = Input(PreviousTx=binascii.hexlify(
+                    bin.prevhash), TxOutId=bin.txOutId, ScriptSig=bin.scriptSig, Sequence=bin.seqNo)
                 i.Transaction = tx
                 i.save()
 
@@ -69,10 +71,12 @@ class Block(models.Model):
 
         return r
 
+
 class Transaction(models.Model):
     Version = models.PositiveIntegerField()
     Locktime = models.PositiveIntegerField()
     Block = models.ForeignKey(Block, related_name='Transactions')
+
 
 class Input(models.Model):
     PreviousTx = models.CharField(max_length=64)
@@ -80,6 +84,7 @@ class Input(models.Model):
     ScriptSig = models.BinaryField()
     Sequence = models.PositiveIntegerField()
     Transaction = models.ForeignKey(Transaction, related_name='Inputs')
+
 
 class Output(models.Model):
     Value = models.PositiveIntegerField()
@@ -93,9 +98,10 @@ class Output(models.Model):
         # OP_DUP OP_HASH160 <pubKeyHash>
         if pubkey[0] == 0x76 and pubkey[1] == 0xa9:
             numBytes = pubkey[2]
-            h = bytes(pubkey[3:3+numBytes])
+            h = bytes(pubkey[3:3 + numBytes])
             version = bytes(b'-')
             instance.Address = hash_to_address(version, h)
 
 
-pre_save.connect(Output.pre_save, Output, dispatch_uid="blockchain.models.Output")
+pre_save.connect(Output.pre_save, Output,
+                 dispatch_uid="blockchain.models.Output")
