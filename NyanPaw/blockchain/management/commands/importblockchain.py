@@ -13,11 +13,18 @@ class Command(BaseCommand):
     can_import_settings = True
 
     def add_arguments(self, parser):
-        parser.add_argument('path', type=argparse.FileType('rb'))
+        parser.add_argument('pathToBlockchain', type=argparse.FileType('rb'))
+        parser.add_argument('--truncate', action='store_true')
 
     def handle(self, *args, **options):
-        f = options['path']
+        f = options['pathToBlockchain']
+        f.seek(655541, 0)
 
+        if options['truncate'] is True:
+            print ("Truncating database ...")
+            dbBlock.objects.all().delete()
+
+        print ("Parsing blockchain ...")
         i = 0
         with transaction.atomic():
             while True:
@@ -25,12 +32,13 @@ class Command(BaseCommand):
                 db = dbBlock.from_blocktools(b)
                 try:
                     db.save()
-                    print str(b)
+                    #print (str(b))
+                    print ("Position:", f.tell())
                 except IntegrityError as ie:
                     pass
 
                 i += 1
-                if i > 666:
+                if i >= 1:
                     break
 
         f.close()

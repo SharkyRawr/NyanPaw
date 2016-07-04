@@ -1,6 +1,10 @@
 ﻿from django.db import models
+from django.db.models.signals import pre_save
 
-from blockchain.util import calculate_difficulty
+from blockchain.util import calculate_difficulty, hash_to_address
+from blockchain.util.base58 import b58encode, b58decode
+
+import binascii
 
 # Create your models here.
 
@@ -27,12 +31,12 @@ class Block(models.Model):
             return r
         except Block.DoesNotExist:
             r = Block()
-        
+
         # Block Header
         h = block.blockHeader
         r.Version = h.version
-        r.PreviousBlockHash = unicode(h.previousHash.encode('hex'))
-        r.MerkleRoot = unicode(h.merkleHash.encode('hex'))
+        r.PreviousBlockHash = str(binascii.hexlify(h.previousHash))
+        r.MerkleRoot = str(binascii.hexlify(h.merkleHash))
         r.Time = h.time
         r.Bits = h.bits
         r.Difficulty = calculate_difficulty(r.Bits)
@@ -52,7 +56,7 @@ class Block(models.Model):
             tx.save()
 
             for bin in btx.inputs:
-                i = Input(PreviousTx=bin.prevhash.encode('hex'), TxOutId=bin.txOutId, ScriptSig=bin.scriptSig, Sequence=bin.seqNo)
+                i = Input(PreviousTx=binascii.hexlify(bin.prevhash), TxOutId=bin.txOutId, ScriptSig=bin.scriptSig, Sequence=bin.seqNo)
                 i.Transaction = tx
                 i.save()
 
@@ -81,4 +85,17 @@ class Output(models.Model):
     Value = models.PositiveIntegerField()
     PubKey = models.BinaryField()
     Transaction = models.ForeignKey(Transaction, related_name='Outputs')
+    Address = models.CharField(max_length=128)
 
+    @staticmethod
+    def pre_save(sender, instance, **kwargs):
+        pubkey = instance.PubKey
+        # OP_DUP OP_HASH160 <pubKeyHash>
+        if pubkey[0] == 0x76 and pubkey[1] == 0xa9:
+            numBytes = pubkey[2]
+            h = bytes(pubkey[3:3+numBytes])
+            version = bytes(b'-')
+            instance.Address = hash_to_address(version, h)
+
+
+pre_save.connect(Output.pre_save, Output, dispatch_uid="blockchain.models.Output")

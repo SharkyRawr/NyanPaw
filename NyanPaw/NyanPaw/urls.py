@@ -21,5 +21,5 @@ from web.views import DefaultView
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'/?', DefaultView.as_view(), name='default'),
+    url(r'', DefaultView.as_view(), name='default'),
 ]
