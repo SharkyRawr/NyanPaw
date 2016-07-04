@@ -31,7 +31,8 @@ Transactions:
 
     Outputs:{% for o in tx.Outputs.all %}
         Value:      {{o.Value}}
-        PubKey:     {{o.PubKey|hexlify}}{% endfor%}
+        PubKey:     {{o.PubKey|hexlify}}
+        Address:    {{o.Address}}{% endfor%}
 {% endfor %}
     </pre>
     <hr />

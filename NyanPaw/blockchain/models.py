@@ -13,7 +13,7 @@ class Block(models.Model):
     Version = models.PositiveIntegerField()
     Hash = models.CharField(max_length=64, unique=True)
     PreviousBlockHash = models.CharField(max_length=64)
-    MerkleRoot = models.CharField(max_length=64)
+    MerkleRoot = models.CharField(max_length=64, unique=True)
     Time = models.PositiveIntegerField()
     Bits = models.PositiveIntegerField()
     Difficulty = models.FloatField()

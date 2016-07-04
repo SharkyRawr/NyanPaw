@@ -15,10 +15,13 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('pathToBlockchain', type=argparse.FileType('rb'))
         parser.add_argument('--truncate', action='store_true')
+        parser.add_argument('--resume', type=int)
 
     def handle(self, *args, **options):
         f = options['pathToBlockchain']
-        f.seek(655541, 0)
+
+        if options['resume'] is not None:
+            f.seek(options['resume'], 0)
 
         if options['truncate'] is True:
             print ("Truncating database ...")
@@ -38,7 +41,7 @@ class Command(BaseCommand):
                     pass
 
                 i += 1
-                if i >= 1:
+                if i >= 1000:
                     break
 
         f.close()
