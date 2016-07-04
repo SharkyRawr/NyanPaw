@@ -28,7 +28,7 @@ def decode_address(sig, version):
     from .base58 import b58encode
 
     if len(sig) != 35:
-        raise ValueError("PubKey has wrong length", len(sig))
+        raise ValueError("ScriptSignature has wrong length", len(sig))
 
     # Step 2
     sha = hashlib.sha256(sig).digest()
