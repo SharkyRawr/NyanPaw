@@ -23,6 +23,7 @@ Nonce:          {{block.Nonce}}
 
 Transactions:
 {% for tx in block.Transactions.all %}
+  TX hash: {{ tx.Hash }}
     Inputs:{% for i in tx.Inputs.all %}
         PreviousTx: {{i.PreviousTx}}
         TxOutId:    {{i.TxOutId}}
