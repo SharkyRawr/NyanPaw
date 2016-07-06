@@ -10,5 +10,5 @@ class DefaultView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super(DefaultView, self).get_context_data(**kwargs)
-        ctx['blocks'] = Block.objects.all()
+        ctx['blocks'] = Block.objects.order_by('-id').all()[:100]
         return ctx

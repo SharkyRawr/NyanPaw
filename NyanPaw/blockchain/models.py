@@ -10,6 +10,8 @@ import binascii
 
 
 class Block(models.Model):
+    Index = models.PositiveIntegerField(unique=True)
+
     # Header
     Version = models.PositiveIntegerField()
     Hash = models.CharField(max_length=64, unique=True)
@@ -26,12 +28,14 @@ class Block(models.Model):
     #Transactions = models.ForeignKey(Transaction, related_name='blocks')
 
     @staticmethod
-    def from_blocktools(block):
+    def from_blocktools(block, index):
         try:
             r = Block.objects.get(Hash=block.blockHeader.hash())
             return r
         except Block.DoesNotExist:
             r = Block()
+
+        r.Index = index
 
         # Block Header
         h = block.blockHeader
@@ -54,6 +58,7 @@ class Block(models.Model):
         for btx in block.Txs:
             tx = Transaction(Version=btx.version, Locktime=btx.lockTime)
             tx.Block = r
+            tx.Hash = btx.hash()
             tx.save()
 
             for bin in btx.inputs:
@@ -76,6 +81,7 @@ class Transaction(models.Model):
     Version = models.PositiveIntegerField()
     Locktime = models.PositiveIntegerField()
     Block = models.ForeignKey(Block, related_name='Transactions')
+    Hash = models.CharField(max_length=48, unique=True, null=False, blank=False)
 
 
 class Input(models.Model):
@@ -94,6 +100,10 @@ class Output(models.Model):
 
     @staticmethod
     def pre_save(sender, instance, **kwargs):
+        """
+            Calculate Nyancoin address from public key
+        """
+
         pubkey = instance.PubKey
         # OP_DUP OP_HASH160 <pubKeyHash>
         if pubkey[0] == 0x76 and pubkey[1] == 0xa9:
