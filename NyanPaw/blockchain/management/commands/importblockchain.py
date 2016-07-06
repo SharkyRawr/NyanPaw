@@ -46,12 +46,24 @@ class Command(BaseCommand):
         i = 0
         cont = True
         with tqdm(total=chainLen, initial=int(lastBlockPos.Value)) as pbar:
-            with transaction.atomic() as db:
-                while cont is True:
-                    try:
+
+            while cont is True:
+                blockBuffer = []
+
+                try:
+
+                    for i in range(250):
                         b = Block(f)
-                        db = dbBlock.from_blocktools(b, lastBlockIndex)
+                        blockBuffer.append(b)
+
+                except (KeyboardInterrupt, SystemExit):
+                    cont = False
+
+
+                with transaction.atomic():
+                    for b in blockBuffer:
                         try:
+                            db = dbBlock.from_blocktools(b, lastBlockIndex)
                             db.save()
                             #print (str(b))
 
@@ -67,11 +79,10 @@ class Command(BaseCommand):
                         except IntegrityError as ie:
                             print("Error:", ie)
                             raise
+                        except KeyboardInterrupt:
+                            cont = False
 
-                    except (KeyboardInterrupt, SystemExit):
-                        cont = False
-
-                    #i += 1
-                    #if i >= 5000:
-                    #    cont = False
+                #i += 1
+                #if i >= 5000:
+                #    cont = False
         f.close()
