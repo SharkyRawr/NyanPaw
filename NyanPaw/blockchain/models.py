@@ -1,4 +1,7 @@
-﻿from django.db import models
+﻿import logging
+logger = logging.getLogger(__name__)
+
+from django.db import models
 from django.db.models.signals import pre_save
 
 from blockchain.util import calculate_difficulty, hash_to_address
@@ -111,6 +114,8 @@ class Output(models.Model):
             h = bytes(pubkey[3:3 + numBytes])
             version = bytes(b'-')
             instance.Address = hash_to_address(version, h)
+        else:
+            logger.warning("Unable to parse address from PubKey script! 0x%02x%02x", pubkey[0], pubkey[1])
 
 
 pre_save.connect(Output.pre_save, Output,

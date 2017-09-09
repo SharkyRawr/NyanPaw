@@ -31,7 +31,10 @@
     <Compile Include="NyanPaw\blockchain\models.py" />
     <Compile Include="NyanPaw\blockchain\model_routers.py" />
     <Compile Include="NyanPaw\blockchain\tests.py" />
-    <Compile Include="NyanPaw\blockchain\util.py">
+    <Compile Include="NyanPaw\blockchain\util\base58.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NyanPaw\blockchain\util\__init__.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="NyanPaw\blockchain\views.py" />
@@ -62,6 +65,7 @@
     <Folder Include="NyanPaw\blockchain\management\" />
     <Folder Include="NyanPaw\blockchain\management\commands\" />
     <Folder Include="NyanPaw\blockchain\migrations\" />
+    <Folder Include="NyanPaw\blockchain\util\" />
     <Folder Include="NyanPaw\NyanPaw" />
     <Folder Include="NyanPaw\web" />
     <Folder Include="NyanPaw\web\templatetags\" />

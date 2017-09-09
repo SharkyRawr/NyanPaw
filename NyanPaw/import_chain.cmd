@@ -1,3 +1,3 @@
 @echo off
 
-python manage.py importblockchain H:\Blockchains\nyan\blk0001.dat
+python manage.py importblockchain C:\Users\Sharky\AppData\Roaming\NyanCoin\blk0001.dat
