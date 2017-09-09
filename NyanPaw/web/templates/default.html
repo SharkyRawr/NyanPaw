@@ -7,7 +7,7 @@
 </head>
 <body>
 
-    {% load hex %}
+    {% load hex %} {% load math %}
 
     {% for block in blocks %}
     <pre>
@@ -31,9 +31,10 @@ Transactions:
         Sequence:   {{i.Sequence}}{% endfor %}
 
     Outputs:{% for o in tx.Outputs.all %}
-        Value:      {{o.Value}}
+        Value:      {{o.Value|div:100000000}} NYAN
         PubKey:     {{o.PubKey|hexlify}}
-        Address:    {{o.Address}}{% endfor%}
+        Address:    {{o.Address}}
+        {% endfor%}
 {% endfor %}
     </pre>
     <hr />
